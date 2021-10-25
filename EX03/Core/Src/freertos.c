@@ -337,6 +337,53 @@ void data_analyse()
 			led_run=0;
 			printf("OK\r\n");
 	}
+	else if(strcmp((char *)rx1_buff,"SP1") == 0)
+	{
+			led_sp = 1;
+			printf("OK\r\n");
+	}
+	else if(strcmp((char *)rx1_buff,"SP2") == 0)
+	{
+			led_sp = 2;
+			printf("OK\r\n");
+	}
+		else if(strcmp((char *)rx1_buff,"SP3") == 0)
+	{
+			led_sp = 3;
+			printf("OK\r\n");
+	}
+	
+	else if(strcmp((char *)rx1_buff,"SP4") == 0)
+	{
+			led_sp = 4;
+			printf("OK\r\n");
+	}
+	else if(strcmp((char *)rx1_buff,"SP5") == 0)
+	{
+			led_sp = 5;
+			printf("OK\r\n");
+	}
+		else if(strcmp((char *)rx1_buff,"SP6") == 0)
+	{
+			led_sp = 6;
+			printf("OK\r\n");
+	}
+
+		else if(strcmp((char *)rx1_buff,"SP7") == 0)
+	{
+			led_sp = 7;
+			printf("OK\r\n");
+	}
+	else if(strcmp((char *)rx1_buff,"SP8") == 0)
+	{
+			led_sp = 8;
+			printf("OK\r\n");
+	}
+		else if(strcmp((char *)rx1_buff,"SP9") == 0)
+	{
+			led_sp = 9;
+			printf("OK\r\n");
+	}
 	else
 	{
 			printf("%s",rx1_buff);
