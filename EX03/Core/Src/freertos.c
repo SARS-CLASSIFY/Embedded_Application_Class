@@ -62,6 +62,10 @@ uint8_t line_flag = 0;
 
 uint32_t recv_tick = 0;
 
+//seg
+uint8_t save_data[12] = {0};
+uint8_t num = 0;
+uint8_t flag = 0;
 
 /* USER CODE END Variables */
 /* Definitions for TaskLED */
@@ -96,6 +100,8 @@ const osThreadAttr_t TaskSEG_attributes = {
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
 void data_analyse();
+void seg_runing();
+void seg_ctrl();
 /* USER CODE END FunctionPrototypes */
 
 void StartTaskLED(void *argument);
@@ -211,7 +217,8 @@ void StartTaskUART(void *argument)
 		if(recv_tick > 0 && osKernelGetTickCount() >= recv_tick + 20)
 		{
 			*pBuf = '\0';
-			data_analyse();
+			seg_ctrl();
+			seg_runing();
 			pBuf = rx1_buff;
 			recv_tick = 0;
 		}
@@ -235,6 +242,7 @@ void StartTaskKEY(void *argument)
 	
   for(;;)
   {
+		seg_runing();
 		
 		key=ScanKey();
 		
@@ -267,7 +275,7 @@ void StartTaskKEY(void *argument)
 			default:
 				break;
 		}	
-    osDelay(50);
+    osDelay(500);
   }
   /* USER CODE END StartTaskKEY */
 }
@@ -289,7 +297,6 @@ void StartTaskSEG(void *argument)
 		for(i=0;i<4;i++){
 			Write595(i,seg[i],0);
 			osDelay(5);
-		
 		}
     osDelay(1);
   }
@@ -392,7 +399,64 @@ void data_analyse()
 }
 
 
+/*------------------------------------------------------------------------------
+* brief   : 串口接收数码管控制逻辑
+-------------------------------------------------------------------------------*/
+void seg_ctrl()
+{
+	int len,j;
+	flag = 0;
+	num = 0;
+	len = strlen((char*)rx1_buff);
+//	printf("%d\r\n",len);
+	for(int i = 0;i<len;i++)
+	{
+		if(rx1_buff[i] >= '0' && rx1_buff[i] <= '9'&&num<10){
+			save_data[num] = rx1_buff[i];
+			num++;
+		}
+		else if(rx1_buff[i] >= 'A' && rx1_buff[i] <= 'F'&&num<10){
+			save_data[num] = rx1_buff[i]+10-'A';
+			num++;
+		}
+	}
+	
+	save_data[num] = '\0';
+//	printf("%d\r\n",strlen((char*)save_data));
+	
+	if(num<=4){
+		flag = 0;
+	}
+	else{
+		flag = 1;
+	}
+}
 
+/*------------------------------------------------------------------------------
+* brief   : 数码管是否滚动逻辑
+-------------------------------------------------------------------------------*/
+void seg_runing()
+{
+	int i,j;
+	if(flag == 0){
+		for(j=0;j<4;j++){
+			seg[j] = save_data[j];
+		}
+
+	}
+	
+	else if(flag == 1){
+		save_data[strlen((char*)save_data)] = save_data[0];
+		for(i = 0;i<strlen((char*)save_data)-2;i++){
+			save_data[i] = save_data[i+1];
+		}
+		
+		for(j=0;j<4;j++){
+			seg[j] = save_data[j];
+		}	
+		
+	}
+}
 
 /* USER CODE END Application */
 
