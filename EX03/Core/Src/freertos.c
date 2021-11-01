@@ -217,8 +217,9 @@ void StartTaskUART(void *argument)
 		if(recv_tick > 0 && osKernelGetTickCount() >= recv_tick + 20)
 		{
 			*pBuf = '\0';
-			seg_ctrl();
-			seg_runing();
+			data_analyse();
+//			seg_ctrl();
+//			seg_runing();
 			pBuf = rx1_buff;
 			recv_tick = 0;
 		}
