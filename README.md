@@ -3,3 +3,5 @@
 
 - EX01 流水灯按键裸机
 - EX02 freerots初使用
+- EX03 串口实验
+- EX04 OLED GUI实验
