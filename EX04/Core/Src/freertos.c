@@ -79,14 +79,21 @@ extern uint8_t key_sta;
 
 //uart
 #define MAX_RECV_LEN 256
+#define MAX_LINE_SIZE 22
+#define MAX_PAGE_LINE 6
+
 uint8_t rx1_buff[MAX_RECV_LEN] = {0};
+uint8_t recv_buff[MAX_RECV_LEN] = {0};//接收字符串缓存
 uint8_t *pBuf;
 uint8_t line_flag = 0;
 uint32_t recv_tick = 0;
 
-char gui_uart_buff[21*8*10] = {0};
+char gui_uart_buff[MAX_LINE_SIZE*8*10] = {0};
 char str_show[MAX_RECV_LEN] = {0};
 uint8_t gui_uart_index = 0;
+
+
+
 /* USER CODE END Variables */
 /* Definitions for TaskLED */
 osThreadId_t TaskLEDHandle;
@@ -142,6 +149,8 @@ void Key4Done();
 
 //uart
 void data_analyse(char old_str[MAX_RECV_LEN],char str_show[MAX_RECV_LEN],int len);
+void StrFormat(char oldstr[MAX_RECV_LEN],char fmtstr[MAX_LINE_SIZE*8*10],int len);
+
 /* USER CODE END FunctionPrototypes */
 
 void StartTaskLED(void *argument);
@@ -260,19 +269,24 @@ void StartTaskUART(void *argument)
 //		}
 		if(recv_tick > 0 && osKernelGetTickCount() >= recv_tick + 20)
 		{
-			memset(str_show,0,sizeof(MAX_RECV_LEN));
+			
 			*pBuf = '\0';
 			/*-----------------接收逻辑函数调用处---------------------*/
-			printf("%s\r\n",rx1_buff);
-			data_analyse((char*)rx1_buff,str_show,pBuf-rx1_buff+1);
+//			printf("%s\r\n",rx1_buff);
+//			data_analyse((char*)rx1_buff,str_show,pBuf-rx1_buff+1);
+//			memset(str_show,0,sizeof(MAX_RECV_LEN));	
 			
+			memcpy(recv_buff,rx1_buff,pBuf-rx1_buff+1);
+			gui_uart_index = 0;
+			StrFormat((char*)recv_buff,gui_uart_buff,pBuf-rx1_buff-1);
 			
+//			printf("%s",recv_buff);
 			/*--------------------------------------------------------*/
 			
 			
 			pBuf = rx1_buff;
-			HAL_UART_Receive_IT(&huart1,pBuf,1);
 			recv_tick = 0;
+			
 		}
     osDelay(1);
   }
@@ -489,13 +503,18 @@ void DrawUIUSART()
 		GUI_Clear();
 		GUI_SetFont(&GUI_FontHZ_KaiTi_16);
 		GUI_SetTextAlign(GUI_TA_CENTER);
-		GUI_DispStringAt("串口通信",64,0);
+		GUI_DispStringAt("串口通信",40,0);
+
+		char str[10];
+		sprintf(str,"%d/10",gui_uart_index+1);
+		GUI_DispStringAt(str,128-5*6-15,0);
 	
-		//display
-//		printf("%s\r\n",str_show);
-		GUI_SetFont(&GUI_FontHZ_KaiTi_12);
-		GUI_DispStringAt(str_show,10,20);
-	
+		int i;
+		GUI_SetFont(GUI_DEFAULT_FONT);
+		for(i=0;i<MAX_PAGE_LINE;++i)
+		{
+			GUI_DispStringAt(gui_uart_buff + (gui_uart_index*MAX_PAGE_LINE+i)*MAX_LINE_SIZE,0,16+i*8);
+		}
 		GUI_Update();
 }
 
@@ -524,7 +543,7 @@ void beep(uint16_t time,uint8_t tune)
 	beep_tune = tune;
 }
 
-
+//按键响应函数
 void Key1Done()
 {
 	switch (g_ui_indx)
@@ -547,6 +566,7 @@ void Key2Done()
 	{
 		case UI_USART:
 			printf("KEY2\r\n");
+			gui_uart_index = (gui_uart_index+1)%10;
 			break;
 		default:
 			break;
@@ -562,6 +582,7 @@ void Key3Done()
 			break;
 		case UI_USART:
 			printf("KEY3\r\n");
+			gui_uart_index = (gui_uart_index+9)%10;
 			break;
 		default:
 			break;
@@ -605,6 +626,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 }
 
 //串口接收处理逻辑,用于显示较短字符串
+
 void data_analyse(char old_str[MAX_RECV_LEN],char str_show[MAX_RECV_LEN],int len)
 {
 	int row = 0,num = 0;//每行12字符
@@ -619,12 +641,41 @@ void data_analyse(char old_str[MAX_RECV_LEN],char str_show[MAX_RECV_LEN],int len
 		}
 	}
 	
-//	//display
-//	GUI_SetFont(&GUI_FontHZ_KaiTi_12);
-//	GUI_DispStringAt(str_show,10,20);
-//	memset(str_show,0,MAX_RECV_LEN);
+}
+
+//strFormat格式化函数
+void StrFormat(char oldstr[MAX_RECV_LEN],char fmtstr[MAX_LINE_SIZE*8*10],int len)
+{
+	int i,j,row = 0,col = 0;
+	memset(fmtstr,0,MAX_LINE_SIZE*8*10);
 	
 	
+	for(i = 0;i<len;++i)
+	{
+		if(oldstr[i]!='\n' && oldstr[i] != '\r')
+		{
+			fmtstr[row*MAX_LINE_SIZE+col] = oldstr[i];
+			++col;
+			
+			if(col >= MAX_LINE_SIZE-1)
+			{
+				row++;
+				col = 0;	
+			}
+		
+		}
+		else 
+		{
+			if(i>0&&oldstr[i-1]!='\r'&&oldstr[i-1]!='\n')
+				row++;
+			col = 0;
+		}
+		
+		if(row >= 10)
+		{
+			break;
+		}
+	}
 }
 
 /* USER CODE END Application */
