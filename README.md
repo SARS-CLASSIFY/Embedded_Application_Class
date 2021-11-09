@@ -5,3 +5,4 @@
 - EX02 freerots初使用
 - EX03 串口实验
 - EX04 OLED GUI实验
+- EX05 ADC曲线绘制 麦克风响度检测报警
