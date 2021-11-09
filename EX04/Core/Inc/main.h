@@ -106,6 +106,8 @@ void Error_Handler(void);
 #define I2C_SCL_GPIO_Port GPIOB
 #define I2C_SDA_Pin GPIO_PIN_7
 #define I2C_SDA_GPIO_Port GPIOB
+#define DQ_Pin GPIO_PIN_0
+#define DQ_GPIO_Port GPIOE
 #define K1_Pin GPIO_PIN_1
 #define K1_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */

@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;   ../Drivers/STM32F4xx_HAL_Driver/Inc;   ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;   ../Middlewares/Third_Party/FreeRTOS/Source/include;   ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;   ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;   ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;   ../Drivers/CMSIS/Include;   ..\Module\OLED;   ..\Module\SEG;   ..\Module\led;   ..\Module\DELAY;   ..\Module\BEEP</IncludePath>
+              <IncludePath>../Core/Inc;     ../Drivers/STM32F4xx_HAL_Driver/Inc;     ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;     ../Middlewares/Third_Party/FreeRTOS/Source/include;     ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;     ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;     ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;     ../Drivers/CMSIS/Include;     ..\Module\OLED;     ..\Module\SEG;     ..\Module\led;     ..\Module\DELAY;     ..\Module\BEEP</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -409,6 +409,16 @@
               <FilePath>..\Core\Src\KaiTi_16.c</FilePath>
             </File>
             <File>
+              <FileName>KaiTi_12.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\KaiTi_12.c</FilePath>
+            </File>
+            <File>
+              <FileName>SimSun_16.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\SimSun_16.c</FilePath>
+            </File>
+            <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/main.c</FilePath>
@@ -447,16 +457,6 @@
               <FileName>stm32f4xx_hal_timebase_tim.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/stm32f4xx_hal_timebase_tim.c</FilePath>
-            </File>
-            <File>
-              <FileName>KaiTi_12.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\KaiTi_12.c</FilePath>
-            </File>
-            <File>
-              <FileName>SimSun_16.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\SimSun_16.c</FilePath>
             </File>
           </Files>
         </Group>
