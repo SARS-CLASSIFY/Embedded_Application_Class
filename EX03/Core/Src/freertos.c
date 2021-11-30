@@ -240,7 +240,6 @@ void StartTaskKEY(void *argument)
   /* USER CODE BEGIN StartTaskKEY */
   /* Infinite loop */
 	uint8_t key;
-	
   for(;;)
   {
 		seg_runing();
