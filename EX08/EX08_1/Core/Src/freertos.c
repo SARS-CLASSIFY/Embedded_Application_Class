@@ -228,7 +228,7 @@ void StartTaskMain(void *argument)
 	if(val > -40 && val < 150)
 	{
 		temp_alarm_max = val;
-//		printf("temp alarm max:%lf\n\r",temp_alarm_max);
+		printf("temp alarm max:%lf\n\r",temp_alarm_max);
 	}
 	
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)dma_adval, MAX_DMA_BUFF_SIZE);
@@ -347,7 +347,7 @@ void StartTaskKEY(void *argument)
 		{
 			if (beep_cnt)
 			{
-				Beep(&beep_time);
+//				Beep(&beep_time);
 				if (0 == beep_time)
 				{
 					osDelay(100);

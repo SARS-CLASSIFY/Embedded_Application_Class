@@ -266,9 +266,9 @@ int main(void)
 	HAL_Delay(1000);
 //	TestW25Q128();
 //	fs_test();
-//	
-//	HAL_Delay(10000);
-	InitFS(0);
+////	
+////	HAL_Delay(10000);
+//	InitFS(0);
 	
   /* USER CODE END 2 */
 
